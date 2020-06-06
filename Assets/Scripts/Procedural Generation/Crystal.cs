@@ -6,15 +6,17 @@ using UnityEngine;
 public class Crystal
 {
     public Material m_Material;
-    GameObject m_PlanetMesh;
+    public GameObject m_crystalMesh;
 
     public List<Polygon> m_Polygons;
     public List<Vector3> m_Vertices;
+    public List<Vector3> m_MoveableVertices;
 
     public void InitAsIcosohedron ()
     {
         m_Polygons = new List<Polygon> ();
         m_Vertices = new List<Vector3> ();
+        m_MoveableVertices = new List<Vector3> ();
 
         // An icosahedron has 12 vertices, and
         // since it's completely symmetrical the
@@ -88,6 +90,13 @@ public class Crystal
             // Replace all our old polygons with the new set of
             // subdivided ones.           
             m_Polygons = newPolys;
+
+            // Here we grab the vertices we will need to make the crystals 
+            // move and flex.
+            if (i == 1)
+                m_MoveableVertices = m_Vertices; 
+            
+
         }
     }    
     
@@ -130,11 +139,11 @@ public class Crystal
         // We'll store our planet's mesh in the m_PlanetMesh
         // variable so that we can delete the old copy when
         // we want to generate a new one.  
-        if (m_PlanetMesh)
-            GameObject.Destroy(m_PlanetMesh);
+        if (m_crystalMesh)
+            GameObject.Destroy(m_crystalMesh);
         
-        m_PlanetMesh = new GameObject("Crystal");  
-        MeshRenderer surfaceRenderer = m_PlanetMesh.AddComponent<MeshRenderer>();
+        m_crystalMesh = new GameObject("Crystal");  
+        MeshRenderer surfaceRenderer = m_crystalMesh.AddComponent<MeshRenderer>();
 
         surfaceRenderer.material = m_Material;  
         Mesh terrainMesh = new Mesh();  
@@ -179,7 +188,7 @@ public class Crystal
         terrainMesh.normals = normals;
         terrainMesh.colors32 = colors;  
         terrainMesh.SetTriangles(indices, 0);  
-        MeshFilter terrainFilter = m_PlanetMesh.AddComponent<MeshFilter>();
+        MeshFilter terrainFilter = m_crystalMesh.AddComponent<MeshFilter>();
         terrainFilter.mesh = terrainMesh;
     }
 }
